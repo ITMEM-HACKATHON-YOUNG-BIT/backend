@@ -23,4 +23,9 @@ class Users(BaseModel):
 # db.create_tables([Users])
 
 # Users.create(first_name='fname', last_name='lname', id_telegram='idtg')
-print(Users.select().where(Users.first_name == 'fname').get().last_name)
+# print(Users.select().where(Users.first_name == 'fname').get().last_name)
+
+if __name__ == "__main__":
+    db.connect()
+    db.create_tables([Users])
+    db.close()
