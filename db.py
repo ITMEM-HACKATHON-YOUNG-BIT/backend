@@ -28,6 +28,26 @@ class Users(BaseModelDB):
         table_name = 'Users'
 
 
+class Events(BaseModelDB):
+    _id = IntegerField(primary_key=True, column_name='_id')
+    event_id = TextField(unique=True, column_name='event_id', null=True)
+    name = TextField(column_name='name', null=True)
+    organizerName = TextField(column_name='organizerName', null=True)
+    region = TextField(column_name='region', null=True)
+    eventType = TextField(column_name='eventType', null=True)
+    ageFrom = BigIntegerField(column_name='ageFrom', null=True)
+    ageTo = BigIntegerField(column_name='ageTo', null=True)
+    beginsAt = DateTimeField(column_name='beginsAt', null=True)
+    endsAt = DateTimeField(column_name='endsAt', null=True)
+    registrationBeginsAt = DateTimeField(column_name='registrationBeginsAt', null=True)
+    registrationEndsAt = DateTimeField(column_name='registrationEndsAt', null=True)
+    url = TextField(column_name='url', null=True)
+    timestamp = DateTimeField(column_name='timestamp')
+
+    class Meta:
+        table_name = 'Events'
+
+
 # db.connect()
 # db.create_tables([Users])
 
@@ -36,7 +56,7 @@ class Users(BaseModelDB):
 
 def create_database():
     db.connect()
-    db.create_tables([Users])
+    db.create_tables([Users, Events])
     db.close()
 
 
@@ -54,14 +74,16 @@ def add_users():
                     "region": "["})
 
 
-def print_db():
-    pprint(list(Users.select().dicts()))
+def print_db(table):
+    pprint(list(table.select().dicts()))
 
 
 if __name__ == "__main__":
     # create_database()
     # add_users()
-    print_db()
+    print_db(Users)
+    print_db(Events)
+    pprint(vars(Events))
     # print(type(list(Users.select().dicts())[0]))
     # for i in Users.select():
     #     print(i.user_id)

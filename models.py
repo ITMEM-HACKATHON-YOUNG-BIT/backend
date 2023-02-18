@@ -29,7 +29,7 @@ class GetCards(BaseModel):
 
 
 class Event(BaseModel):
-    id: int
+    id: str
     name: str
     organizerName: str
     region: str

@@ -1,18 +1,33 @@
 import peewee
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import JSONResponse
 import logging
 
 from models import *
+import utils
 import db
-
 
 app_api = FastAPI()
 logger = logging.getLogger(__name__)
 
+headers = {
+    "Accept": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "X-Requested-With": "XMLHttpRequest",
+    "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
+}
 
 @app_api.get('/')
 def home():
-    return {'Hello': 'world'}
+    # return {'Hello': 'world'}
+    # return {'Hello': 'world'}
+    return JSONResponse(content={'Hello': 'world'}, headers=headers, status_code=200)
+
+
+@app_api.options('/')
+def home_opt():
+    return JSONResponse(headers=headers, status_code=204)
 
 
 @app_api.post('/user/create/site')
@@ -64,4 +79,54 @@ def new_user_tg(body: NewUserTg):
         raise HTTPException(status_code=400, detail=str(e))
 
 
-# def
+@app_api.post('/postEvent')
+def add_events(body: NewEvents):
+    for event in body.items:
+        try:
+            req = {"ageFrom": event.ageFrom,
+                   "ageTo": event.ageTo,
+                   "beginsAt": utils.to_datetime(event.beginsAt),
+                   "endsAt": utils.to_datetime(event.endsAt),
+                   "eventType": event.eventType,
+                   "event_id": '',
+                   "name": event.name,
+                   "organizerName": event.organizerName,
+                   "region": event.region,
+                   "registrationBeginsAt": utils.to_datetime(event.registrationBeginsAt),
+                   "registrationEndsAt": utils.to_datetime(event.registrationEndsAt),
+                   "url": event.url,
+                   "timestamp": utils.now()
+                   }
+            db.Events.create(**req)
+        except Exception as e:
+            print(e)
+
+
+@app_api.get('/events/get_by_delay')
+def get_events(delay: int = 0):
+    resp = [
+        # {
+        #     'message': 'text1',
+        #     'users': [
+        #         {'user_tg_id': 'id1', 'first_name': 'name1'}
+        #     ]
+        # },
+        # ...
+    ]
+    start_date = utils.now_delay(delay)
+    try:
+        events = list(db.Events.select().where(db.Events.timestamp >= start_date).dicts())
+        if len(events) == 0:
+            return []
+    except Exception as e:
+        print(e)
+        return []
+
+    try:
+        users = list(db.Users.select().where(db.Users.user_tg_id.is_null(False)))
+        if len(users) == 0:
+            return []
+    except Exception as e:
+        print(e)
+
+
