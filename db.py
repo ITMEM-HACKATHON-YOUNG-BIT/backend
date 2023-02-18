@@ -48,6 +48,12 @@ class Events(BaseModelDB):
         table_name = 'Events'
 
 
+class Admins(BaseModelDB):
+    admin_id = IntegerField(primary_key=True, column_name='admin_id')
+    name = TextField(column_name='name', null=True)
+    admin_tg_id = BigIntegerField(column_name='admin_tg_id')
+
+
 # db.connect()
 # db.create_tables([Users])
 
@@ -56,8 +62,9 @@ class Events(BaseModelDB):
 
 def create_database():
     db.connect()
-    db.create_tables([Users, Events])
+    db.create_tables([Users, Events, Admins])
     db.close()
+    Admins.create(name="Максим", admin_tg_id=664892538)
 
 
 def add_users():
@@ -83,7 +90,7 @@ if __name__ == "__main__":
     # add_users()
     print_db(Users)
     print_db(Events)
-    pprint(vars(Events))
+    # pprint(vars(Events))
     # print(type(list(Users.select().dicts())[0]))
     # for i in Users.select():
     #     print(i.user_id)

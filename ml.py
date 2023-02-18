@@ -51,3 +51,8 @@ def classification_users_to_events(users: List[Dict], events: List[Dict]):
                     'username': user['username_tg']
                 })
     return result
+
+
+def answer_question(question: str):
+    # TODO: add answer question
+    return None

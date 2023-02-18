@@ -1,3 +1,4 @@
+import datetime
 from datetime import datetime as dt
 from datetime import timedelta
 
@@ -11,8 +12,8 @@ def to_datetime(s: str):
 
 
 def now_delay(sec: int):
-    return dt.now() - timedelta(seconds=sec)
+    return now() - timedelta(seconds=sec)
 
 
 def now():
-    return dt.now()
+    return dt.utcnow() + timedelta(hours=3)

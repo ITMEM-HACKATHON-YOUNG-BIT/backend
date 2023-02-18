@@ -3,7 +3,7 @@ from typing import List
 
 
 class NewUserTg(BaseModel):
-    tgUserID: int
+    user_tg_id: int
     username: str
 
 
@@ -45,3 +45,8 @@ class Event(BaseModel):
 
 class NewEvents(BaseModel):
     items: List[Event]
+
+
+class UserMessage(BaseModel):
+    user_tg_id: int
+    message: str

@@ -3,6 +3,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 import logging
+from random import choice
 
 from models import *
 import utils
@@ -69,7 +70,7 @@ def new_user_tg(body: NewUserTg):
     try:
         # db.Users.update(user_tg_id=body.tgUserID).where(username_tg=body.username)
         user = db.Users.get(db.Users.username_tg == body.username)
-        user.user_tg_id = body.tgUserID
+        user.user_tg_id = body.user_tg_id
         resp = {'first_name': user.first_name, 'second_name': user.second_name}
         user.save()
         return resp
@@ -122,7 +123,7 @@ def get_events(delay: int = 0):
         return []
 
     try:
-        users = list(db.Users.select().where(db.Users.user_tg_id.is_null(False)))
+        users = list(db.Users.select().where(db.Users.user_tg_id.is_null(False)).dicts())
         if len(users) == 0:
             return []
     except Exception as e:
@@ -130,3 +131,23 @@ def get_events(delay: int = 0):
         return []
 
     return ml.classification_users_to_events(users, events)
+
+
+@app_api.get('/user/message')
+def user_message(body: UserMessage):
+    answer = ml.answer_question(body.message)
+    username = None
+    admin_chat = None
+
+    if answer is None:
+        try:
+            username = db.Users.get(db.Users.user_tg_id == body.user_tg_id).username
+        except Exception as e:
+            print(e)
+
+        try:
+            admin_chat = choice(list(db.Admins.select().dicts()))['admin_tg_id']
+        except Exception as e:
+            print(e)
+
+    return {'message': body.message, 'username': username, 'admin_tg_id': admin_chat}
