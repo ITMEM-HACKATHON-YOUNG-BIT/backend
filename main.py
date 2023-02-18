@@ -1,6 +1,7 @@
 import peewee
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 import logging
 
 from models import *
@@ -10,24 +11,20 @@ import db
 app_api = FastAPI()
 logger = logging.getLogger(__name__)
 
-headers = {
-    "Accept": "application/json",
-    "Access-Control-Allow-Origin": "*",
-    "X-Requested-With": "XMLHttpRequest",
-    "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
-}
+origins = ["*"]
+
+app_api.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app_api.get('/')
 def home():
-    # return {'Hello': 'world'}
-    # return {'Hello': 'world'}
-    return JSONResponse(content={'Hello': 'world'}, headers=headers, status_code=200)
-
-
-@app_api.options('/')
-def home_opt():
-    return JSONResponse(headers=headers, status_code=204)
+    return {'Hello': 'world'}
+    # return JSONResponse(content={'Hello': 'world'}, headers=headers, status_code=200)
 
 
 @app_api.post('/user/create/site')
