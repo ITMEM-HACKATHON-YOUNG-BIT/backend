@@ -47,7 +47,7 @@ def classification_users_to_events(users: List[Dict], events: List[Dict]):
             if match(user, event):
                 result[index]['users'].append({
                     'first_name': user['first_name'],
-                    'tgUserID': user['user_tg_id'],
+                    'user_tg_id': user['user_tg_id'],
                     'username': user['username_tg']
                 })
     return result

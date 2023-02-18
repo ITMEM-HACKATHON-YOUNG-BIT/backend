@@ -95,7 +95,9 @@ def add_events(body: NewEvents):
                    "registrationBeginsAt": utils.to_datetime(event.registrationBeginsAt),
                    "registrationEndsAt": utils.to_datetime(event.registrationEndsAt),
                    "url": event.url,
-                   "timestamp": utils.now()
+                   "timestamp": utils.now(),
+                   "minAmount": event.minAmount,
+                   "maxAmount": event.maxAmount,
                    }
             db.Events.create(**req)
         except Exception as e:
@@ -141,7 +143,7 @@ def user_message(body: UserMessage):
 
     if answer is None:
         try:
-            username = db.Users.get(db.Users.user_tg_id == body.user_tg_id).username
+            username = db.Users.get(db.Users.user_tg_id == body.user_tg_id).username_tg
         except Exception as e:
             print(e)
 

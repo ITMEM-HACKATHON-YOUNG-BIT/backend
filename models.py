@@ -41,6 +41,8 @@ class Event(BaseModel):
     registrationBeginsAt: str
     registrationEndsAt: str
     url: str
+    minAmount: int
+    maxAmount: int
 
 
 class NewEvents(BaseModel):

@@ -43,6 +43,8 @@ class Events(BaseModelDB):
     registrationEndsAt = DateTimeField(column_name='registrationEndsAt', null=True)
     url = TextField(column_name='url', null=True)
     timestamp = DateTimeField(column_name='timestamp')
+    minAmount = BigIntegerField(column_name='minAmount', null=True)
+    maxAmount = BigIntegerField(column_name='maxAmount', null=True)
 
     class Meta:
         table_name = 'Events'
@@ -90,6 +92,7 @@ if __name__ == "__main__":
     # add_users()
     print_db(Users)
     print_db(Events)
+    print_db(Admins)
     # pprint(vars(Events))
     # print(type(list(Users.select().dicts())[0]))
     # for i in Users.select():
