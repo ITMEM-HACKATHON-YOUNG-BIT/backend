@@ -153,3 +153,16 @@ def user_message(body: UserMessage):
             print(e)
 
     return {'message': answer, 'username': username, 'admin_tg_id': admin_chat}
+
+
+@app_api.get('user/check_register')
+def check_user_registered(user_site_id: int = -1):
+    if user_site_id == -1:
+        raise HTTPException(status_code=400)
+
+    try:
+        db.Users.get(db.Users.user_site_id == user_site_id)
+        return True
+    except:
+        pass
+    return False

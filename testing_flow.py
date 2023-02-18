@@ -1,7 +1,7 @@
 import requests
 
 
-def create_user():
+def create_ilya():
     requests.post(url='http://localhost:8000/user/create/site', json={
         "user_site_id": 10,
         "first_name": "илья",
@@ -15,14 +15,28 @@ def create_user():
     })
 
 
-def set_tg():
+def create_denis():
+    requests.post(url='http://localhost:8000/user/create/site', json={
+        'user_site_id': 1675958296331724215,
+        'first_name': 'Денис',
+        'second_name': 'Жимоедов',
+        'third_name': 'Евгеньевич',
+        'birthday': '17.12.2002',
+        'sex': 'муж',
+        'phone': '89994403461',
+        'email': 'denchicez@gmail.com',
+        'region': 'г. Санкт-Петербург',
+    })
+
+
+def set_tg_ilya():
     requests.post(url='http://localhost:8000/user/set/tg_id', json={
         "user_site_id": 10,
         "username_tg": "@noisegain"
     })
 
 
-def reg_tg():
+def reg_tg_ilya():
     requests.post(url='http://localhost:8000/user/create/tg', json={
         "user_tg_id": 12345,
         "username": "@noisegain"
@@ -79,7 +93,7 @@ def add_events():
     })
 
 
-create_user()
-set_tg()
-reg_tg()
+create_ilya()
+set_tg_ilya()
+reg_tg_ilya()
 add_events()
