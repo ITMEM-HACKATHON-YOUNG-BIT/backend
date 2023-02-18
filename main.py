@@ -6,6 +6,7 @@ import logging
 
 from models import *
 import utils
+import ml
 import db
 
 app_api = FastAPI()
@@ -20,6 +21,7 @@ app_api.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 @app_api.get('/')
 def home():
@@ -101,15 +103,15 @@ def add_events(body: NewEvents):
 
 @app_api.get('/events/get_by_delay')
 def get_events(delay: int = 0):
-    resp = [
-        # {
-        #     'message': 'text1',
-        #     'users': [
-        #         {'user_tg_id': 'id1', 'first_name': 'name1'}
-        #     ]
-        # },
-        # ...
-    ]
+    # resp = [
+    #     {
+    #         'message': 'text1',
+    #         'users': [
+    #             {'user_tg_id': 'id1', 'first_name': 'name1'}
+    #         ]
+    #     },
+    #     ...
+    # ]
     start_date = utils.now_delay(delay)
     try:
         events = list(db.Events.select().where(db.Events.timestamp >= start_date).dicts())
@@ -125,5 +127,6 @@ def get_events(delay: int = 0):
             return []
     except Exception as e:
         print(e)
+        return []
 
-
+    return ml.classification_users_to_events(users, events)

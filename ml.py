@@ -1,5 +1,10 @@
 from typing import List, Dict
 import datetime
+from texts import *
+
+
+def is_expiring(date: datetime.datetime):
+    return (date - datetime.datetime.now()).days < 2
 
 
 def eq_regions(r1: str, r2: str):
@@ -25,8 +30,17 @@ def match(user: dict, event: dict) -> bool:
 
 def classification_users_to_events(users: List[Dict], events: List[Dict]):
     result = []
+    for event in events:
+        result.append({
+            'message': EVENT_EXPIRED if is_expiring(event['registrationEndsAt']) else NEW_EVENT,
+            'users': []
+        })
     for user in users:
-        for event in events:
+        for index, event in enumerate(events):
             if match(user, event):
-                pass
-
+                result[index]['users'].append({
+                    'first_name': user['first_name'],
+                    'user_tg_id': user['user_tg_id'],
+                    'username': user['username']
+                })
+    return result
