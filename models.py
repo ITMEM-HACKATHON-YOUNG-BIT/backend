@@ -50,5 +50,6 @@ class NewEvents(BaseModel):
 
 
 class UserMessage(BaseModel):
-    user_tg_id: int
+    user_tg_id: Optional[int]
+    user_site_id: Optional[int]
     message: str

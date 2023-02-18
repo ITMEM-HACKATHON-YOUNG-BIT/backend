@@ -1,6 +1,55 @@
 from typing import List, Dict
 import datetime
 from texts import *
+import json
+import time
+
+from sklearn.metrics.pairwise import cosine_similarity
+from transformers import AutoTokenizer, AutoModel
+import torch
+import numpy as np
+
+
+tokenizer = AutoTokenizer.from_pretrained('sberbank-ai/sbert_large_nlu_ru')
+model = AutoModel.from_pretrained('sberbank-ai/sbert_large_nlu_ru')
+
+
+def get_faq_questions() -> dict:
+    return json.load(open('faq.json'))
+
+
+def get_similar_question_faq(question: str):
+    faq_q = get_faq_questions()
+    sentences = [question] + list(faq_q.keys())
+
+    tokens = tokenizer(sentences,
+                       max_length=128,
+                       truncation=True,
+                       padding='max_length',
+                       return_tensors='pt')
+    outputs = model(**tokens)
+    embeddings = outputs.last_hidden_state
+    mask = tokens['attention_mask'].unsqueeze(-1).expand(embeddings.size()).float()
+    masked_embeddings = embeddings * mask
+    summed = torch.sum(masked_embeddings, 1)
+    counted = torch.clamp(mask.sum(1), min=1e-9)
+    mean_pooled = summed / counted
+    mean_pooled = mean_pooled.detach().numpy()
+    scores = np.zeros((mean_pooled.shape[0], mean_pooled.shape[0]))
+    for i in range(mean_pooled.shape[0]):
+        scores[i, :] = cosine_similarity(
+            [mean_pooled[i]],
+            mean_pooled
+        )[0]
+
+    answ = scores[0][1:]
+    for i in range(len(answ)):
+        answ[i] = (answ[i], i)
+    print(answ)
+    sim_q = max(answ)
+    if sim_q[1] < .7:
+        return None
+    return f"Ваш вопрос похож на '{sim_q[0]}'\nОтвет: {faq_q[sim_q[0]]}"
 
 
 def is_expiring(date: datetime.datetime):
@@ -55,5 +104,8 @@ def classification_users_to_events(users: List[Dict], events: List[Dict]):
 
 
 def answer_question(question: str):
-    # TODO: add answer question
-    return None
+    return get_similar_question_faq(question)
+
+
+if __name__ == "__main__":
+    get_similar_question_faq("какие есть статусы заявок, если я хочу податься на грант")

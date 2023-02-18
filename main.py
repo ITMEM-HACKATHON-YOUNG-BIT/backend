@@ -135,8 +135,7 @@ def get_events(delay: int = 0):
     return ml.classification_users_to_events(users, events)
 
 
-@app_api.get('/user/message')
-def user_message(body: UserMessage):
+def answer_question(body: UserMessage, from_site: bool):
     answer = ml.answer_question(body.message)
     username = None
     admin_chat = None
@@ -152,7 +151,20 @@ def user_message(body: UserMessage):
         except Exception as e:
             print(e)
 
+    if answer is None and from_site:
+        answer = "Ваш вопрос не был найден среди часто задаваемых, перенаправлю Вас на администратора"
+
     return {'message': answer, 'username': username, 'admin_tg_id': admin_chat}
+
+
+@app_api.get('/user/message')
+def user_message(body: UserMessage):
+    return answer_question(body, from_site=False)
+
+
+@app_api.get('/user/message/site')
+def user_message(body: UserMessage):
+    return answer_question(body, from_site=True)
 
 
 @app_api.get('/user/check_register')
