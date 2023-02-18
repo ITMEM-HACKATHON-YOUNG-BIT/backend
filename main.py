@@ -155,7 +155,7 @@ def user_message(body: UserMessage):
     return {'message': answer, 'username': username, 'admin_tg_id': admin_chat}
 
 
-@app_api.get('user/check_register')
+@app_api.get('/user/check_register')
 def check_user_registered(user_site_id: int = -1):
     if user_site_id == -1:
         raise HTTPException(status_code=400)

@@ -36,10 +36,24 @@ def set_tg_ilya():
     })
 
 
+def set_tg_denis():
+    requests.post(url='http://localhost:8000/user/set/tg_id', json={
+        "user_site_id": 1675958296331724215,
+        "username_tg": "@denchicez"
+    })
+
+
 def reg_tg_ilya():
     requests.post(url='http://localhost:8000/user/create/tg', json={
-        "user_tg_id": 12345,
+        "user_tg_id": 398108733,
         "username": "@noisegain"
+    })
+
+
+def reg_tg_denis():
+    requests.post(url='http://localhost:8000/user/create/tg', json={
+        "user_tg_id": 619363332,
+        "username": "@denchicez"
     })
 
 
