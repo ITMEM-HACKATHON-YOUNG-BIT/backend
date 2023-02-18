@@ -87,7 +87,7 @@ def add_events(body: NewEvents):
                    "beginsAt": utils.to_datetime(event.beginsAt),
                    "endsAt": utils.to_datetime(event.endsAt),
                    "eventType": event.eventType,
-                   "event_id": '',
+                   "event_id": event.id,
                    "name": event.name,
                    "organizerName": event.organizerName,
                    "region": event.region,
