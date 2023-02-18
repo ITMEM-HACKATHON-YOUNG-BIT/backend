@@ -35,12 +35,19 @@ def classification_users_to_events(users: List[Dict], events: List[Dict]):
             'message': EVENT_EXPIRED if is_expiring(event['registrationEndsAt']) else NEW_EVENT,
             'users': []
         })
+        result[-1]['message'] = result[-1]['message'] % (event['name'],
+                                                         event['organizerName'],
+                                                         event['registrationBeginsAt'],
+                                                         event['registrationEndsAt'],
+                                                         event['beginsAt'],
+                                                         event['endsAt'],
+                                                         event['url'])
     for user in users:
         for index, event in enumerate(events):
             if match(user, event):
                 result[index]['users'].append({
                     'first_name': user['first_name'],
-                    'user_tg_id': user['user_tg_id'],
-                    'username': user['username']
+                    'tgUserID': user['user_tg_id'],
+                    'username': user['username_tg']
                 })
     return result
