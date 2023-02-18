@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 
 
 class NewUserTg(BaseModel):
@@ -41,8 +41,8 @@ class Event(BaseModel):
     registrationBeginsAt: str
     registrationEndsAt: str
     url: str
-    minAmount: int
-    maxAmount: int
+    minAmount: Optional[int]
+    maxAmount: Optional[int]
 
 
 class NewEvents(BaseModel):

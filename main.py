@@ -51,7 +51,7 @@ def new_user_site(body: NewUserSite):
 def set_tg_id(body: SetTgId):
     print(body)
     try:
-        username = body.username_tg
+        username = body.username_tg.lower()
         if not username.startswith('@'):
             username = '@' + username
         q = db.Users.update(username_tg=username).where(db.Users.user_site_id == body.user_site_id)
@@ -69,7 +69,7 @@ def set_tg_id(body: SetTgId):
 def new_user_tg(body: NewUserTg):
     try:
         # db.Users.update(user_tg_id=body.tgUserID).where(username_tg=body.username)
-        user = db.Users.get(db.Users.username_tg == body.username)
+        user = db.Users.get(db.Users.username_tg == body.username.lower())
         user.user_tg_id = body.user_tg_id
         resp = {'first_name': user.first_name, 'second_name': user.second_name}
         user.save()
