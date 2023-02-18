@@ -150,4 +150,4 @@ def user_message(body: UserMessage):
         except Exception as e:
             print(e)
 
-    return {'message': body.message, 'username': username, 'admin_tg_id': admin_chat}
+    return {'message': answer, 'username': username, 'admin_tg_id': admin_chat}
