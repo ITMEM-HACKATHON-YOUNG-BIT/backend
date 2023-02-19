@@ -164,10 +164,8 @@ def user_message(body: UserMessage):
     return answer_question(body, from_site=False)
 
 
-@app_api.get('/user/message/site')
-def user_message(message: str):
-    body = UserMessage()
-    body.message = message
+@app_api.post('/user/message/site')
+def user_message(body: UserMessage):
     return answer_question(body, from_site=True)
 
 
