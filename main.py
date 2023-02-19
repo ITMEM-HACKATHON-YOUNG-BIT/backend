@@ -1,5 +1,7 @@
+import tempfile
+
 import peewee
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, File
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 import logging
@@ -163,7 +165,9 @@ def user_message(body: UserMessage):
 
 
 @app_api.get('/user/message/site')
-def user_message(body: UserMessage):
+def user_message(message: str):
+    body = UserMessage()
+    body.message = message
     return answer_question(body, from_site=True)
 
 
@@ -178,3 +182,11 @@ def check_user_registered(user_site_id: int = -1):
     except:
         pass
     return False
+
+
+@app_api.get('/user/message/voice')
+async def create_file(file: bytes = File()):
+    f = tempfile.NamedTemporaryFile(delete=False)
+    f.write(file)
+    f.close()
+    return {"file_size": len(file)}
