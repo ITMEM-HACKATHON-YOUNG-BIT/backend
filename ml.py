@@ -10,8 +10,8 @@ import torch
 import numpy as np
 
 
-tokenizer = AutoTokenizer.from_pretrained('sberbank-ai/sbert_large_nlu_ru')
-model = AutoModel.from_pretrained('sberbank-ai/sbert_large_nlu_ru')
+tokenizer = AutoTokenizer.from_pretrained('cointegrated/rubert-tiny')  # sberbank-ai/sbert_large_nlu_ru
+model = AutoModel.from_pretrained('cointegrated/rubert-tiny')
 
 
 def get_faq_questions() -> dict:
@@ -42,14 +42,16 @@ def get_similar_question_faq(question: str):
             mean_pooled
         )[0]
 
-    answ = scores[0][1:]
+    answ = list(scores[0][1:])
     for i in range(len(answ)):
-        answ[i] = (answ[i], i)
+        answ[i] = (answ[i], i + 1)
+
     print(answ)
     sim_q = max(answ)
-    if sim_q[1] < .7:
+    print(sim_q)
+    if sim_q[0] < .7:
         return None
-    return f"Ваш вопрос похож на '{sim_q[0]}'\nОтвет: {faq_q[sim_q[0]]}"
+    return f"Ваш вопрос похож на '{sentences[sim_q[1]]}'\nОтвет: {faq_q[sentences[sim_q[1]]]}"
 
 
 def is_expiring(date: datetime.datetime):
@@ -108,4 +110,4 @@ def answer_question(question: str):
 
 
 if __name__ == "__main__":
-    get_similar_question_faq("какие есть статусы заявок, если я хочу податься на грант")
+    print(get_similar_question_faq("какие есть статусы заявок, если я хочу податься на грант"))
