@@ -175,8 +175,8 @@ def check_user_registered(user_site_id: int = -1):
         raise HTTPException(status_code=400)
 
     try:
-        db.Users.get(db.Users.user_site_id == user_site_id)
-        return True
+        user = db.Users.get(db.Users.user_site_id == user_site_id)
+        return user.user_tg_id is not None
     except:
         pass
     return False
