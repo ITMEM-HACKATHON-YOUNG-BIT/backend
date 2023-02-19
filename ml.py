@@ -51,7 +51,7 @@ def get_similar_question_faq(question: str):
     print(sim_q)
     if sim_q[0] < .7:
         return None
-    return f"Ваш вопрос похож на '{sentences[sim_q[1]]}'\nОтвет: {faq_q[sentences[sim_q[1]]]}"
+    return f"{faq_q[sentences[sim_q[1]]]}"
 
 
 def is_expiring(date: datetime.datetime):
